@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Day3-Struts2-0804:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Day3_Struts2_0804_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Day3-Struts2-0804/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Day3-Struts2-0804" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Struts 2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

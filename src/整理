@@ -1,0 +1,65 @@
+1. 验证器
+作用: 用来验证表单是否合法
+    1.1 硬编码
+    在Action类中使用Java代码来验证
+    1.1.1
+    重写 validate 方法, 该方法在所有的action方法之前执行
+    如果某个属性验证之后不合法,
+    使用 addFieldError/addActionError 添加错误信息
+    在jsp页面中可以使用 <s: fielderror/>来显示错误信息
+    如果某个action方法不需要验证, 使用 @SkipValidation 注解标记
+    1.1.2
+    如果需要给某个action方法单独添加验证, 例如register方法
+    那么需要定义一个单独的验证方法,
+    方法为: public void validateRegister
+
+    1.2 配置文件添加验证
+    如果需要给UserAction类中的所有action方法添加验证,
+    那么在该类的同包下新建一个xml配置文件,
+    文件名为 UserAction-validation.xml.
+    配置文件中需要加入声明:
+    <!DOCTYPE validators PUBLIC
+            "-//Apache Struts//XWork Validator 1.0.3//EN"
+            "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+    这个声明可以去:struts2-core-2.5.13.jar!/xwork-validator-1.0.3.dtd查看
+    如果需要给UserAction类中的某个方法(login)单独添加验证,
+    那么xml配置文件名为:UserAction-login-validation.xml,
+    内容是一样的.
+    1.3 自定义验证器
+    新建类继承自FieldValidatorSupport, 重写validate方法
+    在方法内进行合适的条件判断, 如果验证没通过,
+    使用addFieldError方法添加错误信息.
+    在src下新建validators.xml文件, 添加文件声明
+    <!DOCTYPE validators PUBLIC
+            "-//Apache Struts//XWork Validator Definition 1.0//EN"
+            "http://struts.apache.org/dtds/xwork-validator-definition-1.0.dtd">
+    可以仿照:struts2-core-2.5.13.jar!/com/opensymphony/xwork2/validator/validators/default.xml写
+
+2. 拦截器
+    可以指定在某个action方法执行之前根据条件进行拦截.
+    新建类继承自AbstractInterceptor或者其子类
+    重写方法.
+    在方法中根据需求进行拦截.
+    方法的返回值为result的name属性.
+    在struts.xml中声明该拦截器.
+    在package标签下新建interceptors标签
+    interceptors标签下新建interceptor标签,
+    指定name和class属性.
+    在interceptors标签下新建拦截器栈,
+    也就是interceptor-stack标签, 指定新的拦截器的名字
+    将新建的拦截器和默认的拦截器栈都添加到新的拦截器栈中
+    2.1使用拦截器:
+    2.1.1. 给单独的某个action方法加拦截器
+    在action中新建interceptor-ref标签,
+    指定某个拦截器或拦截器栈
+    2.1.2. 给当前package下的所有action都加拦截器
+    在package标签下新建default-interceptor-ref标签
+    指定某个拦截器或拦截器栈
+
+    2.2 拦截和放行
+    如果需要对某个action方法进行拦截或放行,
+    那么拦截器类需要继承自MethodFilterInterceptor类.
+    然后在struts.xml中声明拦截器时,
+    在拦截器的标签内部添加param标签,
+    includeMethods代表拦截, 如果有多个方法, 中间用','隔开
+    excludeMethods代表放行, 同上

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <package name="login" extends="struts-default">
+        <action name="login"
+                class="com.lanou.action.ValidateAction"
+                method="login">
+            <result name="success">/success.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+
+        <action name="register"
+                class="com.lanou.action.ValidateAction"
+                method="register">
+            <result name="success">/success.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+
+        <action name="findAll"
+                class="com.lanou.action.ValidateAction"
+                method="findAll">
+            <result name="success">/success.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+    </package>
+
+    <package name="xml" extends="struts-default" namespace="/xml">
+        <!--拦截器-->
+         <interceptors>
+             <interceptor name="LoginInterceptor" class="com.lanou.interceptor.LoginInterceptor">
+
+                 <!--includeMethods 代表拦截,如果有多个方法中间用 ","隔开-->
+                 <param name="includeMethods">findAll</param>
+
+                 <!--excludeMethods 代表放行,同上-->
+                 <param name="excludeMethods">login</param>
+             </interceptor>
+             <interceptor name="testInterceptor" class="com.lanou.interceptor.TestInterceptor"/>
+             <!--定义一个新的拦截器栈-->
+             <interceptor-stack name="myInterceptorStark">
+                 <!--将新建的拦截器加入到新栈-->
+                 <interceptor-ref name="LoginInterceptor"/>
+                 <interceptor-ref name="testInterceptor"/>
+                 <!--将默认的拦截器栈加入到新栈-->
+                 <interceptor-ref name="defaultStack"/>
+             </interceptor-stack>
+         </interceptors>
+
+        <!--定义一个全局的拦截器,对所有的action都生效-->
+        <default-interceptor-ref name="myInterceptorStark"/>
+
+
+        <action name="login"
+                class="com.lanou.action.XMLAction"
+                method="login">
+            <!--当单独指定自定义拦截器时,系统中默认的拦截器都会失效
+                解决办法:
+                新建拦截器栈,把自己创建的拦截器和系统的拦截器栈都加入到新的拦截器栈中
+                -->
+            <!--<interceptor-ref name="testInterceptor"/>-->
+
+            <!--指定新建的拦截器栈-->
+            <interceptor-ref name="myInterceptorStark"/>
+            <result name="success">/success.jsp</result>
+            <result name="input">/login.jsp</result>
+        </action>
+
+
+
+        <action name="findAll"
+                class="com.lanou.action.XMLAction"
+                method="findAll">
+            <result name="success">/success.jsp</result>
+            <result name="login">/login.jsp</result>
+        </action>
+    </package>
+</struts>
